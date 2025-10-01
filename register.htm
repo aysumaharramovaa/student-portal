@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Portal - Register</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="/assets/logo.png" />
+  </head>
+  <body>
+    <form action="register.php" method="post">
+      <label for=""
+        >Name:
+        <input type="text" name="name" placeholder="Enter name" />
+      </label>
+      <label for=""
+        >Surname:
+        <input type="text" name="surname" placeholder="Enter surname" />
+      </label>
+      <label for=""
+        >Username:
+        <input type="text" name="user" placeholder="Enter username" />
+      </label>
+      <label for=""
+        >User Type:
+        <select name="user_type" id="">
+          <option value="">Select User Type</option>
+          <option value="admin">Admin</option>
+          <option value="tutor">Tutor</option>
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+        </select>
+      </label>
+      <label for=""
+        >Password:
+        <input type="password" name="pass" placeholder="Enter password" />
+      </label>
+
+      <input type="submit" value="Register" />
+      <hr />
+      <span>I have <a href="index.htm">account</a></span>
+    </form>
+  </body>
+</html>
