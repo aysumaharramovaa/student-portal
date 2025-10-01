@@ -12,7 +12,7 @@ $user_type = $_POST['user_type'];
 $sql = "INSERT INTO users (username, password, name,surname,user_type) VALUES ('$user', '$sifrelenmis', '$name','$surname','$user_type')";
 
 if ($conn->query($sql) === TRUE) {
- header('location:index.html');
+ header('location:index.htm');
 } else {
   echo "Error: " . $sql . "<br>" . $conn->error;
 }
