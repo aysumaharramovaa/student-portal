@@ -16,7 +16,7 @@ $type = $_SESSION['type'];
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Student Portal</title>
+<title>Home-Student Portal</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -46,7 +46,7 @@ if ($type == "student") {
 
 } elseif ($type == "tutor") {
     echo "<h2>Tutor Dashboard</h2>";
-    echo "<p>You can create and edit students and groups (cannot delete)</p>";
+    echo "<p>You can create and edit students and groups (cannot delete)</p>";  
 
 
 } elseif ($type == "teacher") {
