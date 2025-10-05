@@ -1,93 +1,74 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f2f2f2;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-label {
-  display: block;
-  margin-bottom: 15px;
-  color: #333;
-  font-size: 14px;
-}
-input[type="text"],
-input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-input[type="submit"] {
-  width: 100%;
-  background-color: black;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212; 
+    color: #ffffff;
 }
 
-input[type="submit"]:hover {
-  background-color: #323432;
+h1 {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 3em;
+    color: #00bfff; 
 }
 
-span {
-  display: block;
-  text-align: center;
-  margin-top: 20px;
-  font-size: 13px;
-  color: #555;
+h2 {
+    color: #ffb400; 
+    margin-top: 30px;
+    text-align: center;
 }
 
-a {
-  color: #2a2b2a;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
+p {
+    font-size: 1.1em;
+    margin: 10px 0;
+    text-align: center;
 }
 
 hr {
-  margin: 20px 0;
-  border: none;
-  border-top: 1px solid #eee;
+    border: 0;
+    height: 2px;
+    background: #333;
+    margin: 30px 0;
 }
 
-label {
-  display: block;
-  font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 8px;
-  color: #333;
-  font-family: Arial, sans-serif;
+
+a {
+    display: block;
+    text-align: center;
+    margin: 20px auto;
+    padding: 10px 20px;
+    width: 120px;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #ff4c4c;
+    border-radius: 8px;
+    transition: 0.3s;
 }
 
-select {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: #fff;
-  font-size: 14px;
-  color: #333;
-  transition: all 0.3s ease;
-  appearance: none; 
+a:hover {
+    background-color: #ff0000;
+    transform: scale(1.05);
 }
-
-select:hover {
-  border-color: #888;
+body > * {
+    animation: fadeIn 1s ease-in;
 }
-
-select:focus {
-  border-color: #939493;
-  box-shadow: 0 0 5px rgba(121, 123, 121, 0.5);
-  outline: none;
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2em;
+    }
+    h2 {
+        font-size: 1.5em;
+    }
+    p {
+        font-size: 1em;
+    }
+    a {
+        width: 100px;
+        padding: 8px 0;
+    }
 }

@@ -1,21 +1,25 @@
 <?php
-include('db.php');
+include('database.php');
 
-$name = $_POST['name'];
-$surname = $_POST['surname'];
-$user = $_POST["user"];
-$pass = $_POST['pass'];
-$sifrelenmis = password_hash($pass,PASSWORD_DEFAULT);
-$user_type = $_POST['user_type'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST['name'];
+    $surname = $_POST['surname'];
+    $user = $_POST["user"];
+    $pass = $_POST['pass'];
+    $sifrelenmis = password_hash($pass, PASSWORD_DEFAULT);
+    $user_type = $_POST['user_type'];
 
+    $stmt = $conn->prepare("INSERT INTO users (username, password, name, surname, user_type) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $user, $sifrelenmis, $name, $surname, $user_type);
 
-$sql = "INSERT INTO users (username, password, name,surname,user_type) VALUES ('$user', '$sifrelenmis', '$name','$surname','$user_type')";
+    if ($stmt->execute()) {
+        header('Location: index.htm');
+        exit();
+    } else {
+        echo "Error: " . $stmt->error;
+    }
 
-if ($conn->query($sql) === TRUE) {
- header('location:index.htm');
-} else {
-  echo "Error: " . $sql . "<br>" . $conn->error;
+    $stmt->close();
+    $conn->close();
 }
-
-$conn->close();
 ?>
