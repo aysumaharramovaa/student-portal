@@ -25,161 +25,300 @@ $type = $_SESSION['type'];
 
     <hr>
 
+
+
     <?php
-    if ($type == "student") {
-        $sql = "SELECT g.group_name, t.name as teacher_name, s.subject_name
-            FROM student_groups sg
-            JOIN groups g ON sg.group_id = g.id
-            JOIN users t ON g.tutor_id = t.id
-            JOIN subjects s ON s.teacher_id = t.id
-            JOIN users u ON sg.student_id = u.id
-            WHERE u.username = '$name'";
-        $result = $conn->query($sql);
-        echo "<h1>Welcome, $name!</h1>
-        <p>User Type: $type</p>";
-        echo "<h2>Your Classes</h2>";
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                echo "<p>Group: " . $row['group_name'] . " | Teacher: " . $row['teacher_name'] . " | Subject: " . $row['subject_name'] . "</p>";
-            }
-        } else {
-            echo "<p>No classes assigned yet.</p>";
-        }
-
-    } elseif ($type == "tutor") {
-        echo "<h2>Tutor Dashboard</h2>";
-        echo "<p>You can create and edit students and groups (cannot delete)</p>";
-
-
-    } elseif ($type == "teacher") {
-        echo "<h2>Teacher Dashboard</h2>";
-        echo "<p>You can see only your groups and subjects</p>";
-
-
-
-        //admin
-    } elseif ($type == "admin") {
-
-
-        echo "<style>
-            .section {
-                margin: 20px auto;
-                padding: 15px;
-                border: 1px solid #ccc;
-                border-radius: 8px;
-                width: 80%;
-                background: #000000ff;
-            }
-            .section h3 {
-                margin-top: 0;
-                text-align:center;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 10px;
-            }
-            th, td {
-                border: 1px solid ;
-                padding: 8px;
-                text-align: center;
-            }
-            th {
-                background: #898585ff;
-            }
-            button {
-                padding: 5px 10px;
-                margin: 2px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-            }
-            .edit-btn { background: #4CAF50; color: white; }
-            .delete-btn { background: #f44336; color: white; }
-            .add-btn { background: #2196F3; color: white; width: 100%; padding: 8px; }
-        </style>";
-
-        // muellim hissesi
-        echo "<div class='section'>
-            <h3>Müəllimlər</h3>
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Ad Soyad</th>
-                    <th>Username</th>
-                    <th>Əməliyyatlar</th>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Müəllim 1</td>
-                    <td>muellim1@example.com</td>
-                    <td>
-                        <button class='edit-btn'>Redaktə et</button>
-                        <button class='delete-btn'>Sil</button>
-                    </td>
-                </tr>
-            </table>
-            <button class='add-btn'>+ Yeni müəllim əlavə et</button>
-          </div>
-          ";
-        echo "\n";
-        echo "<br/>";
-
-        // tyutor hissesi
-        echo "<div class='section'>
-            <h3>Tyutorlar</h3>
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Ad Soyad</th>
-                    <th>Username</th>
-                    <th>Əməliyyatlar</th>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Tyutor 1</td>
-                    <td>tyutor1@example.com</td>
-                    <td>
-                        <button class='edit-btn'>Redaktə et</button>
-                        <button class='delete-btn'>Sil</button>
-                    </td>
-                </tr>
-            </table>
-            <button class='add-btn'>+ Yeni tyutor əlavə et</button>
-          </div>";
-
-        // student
-        echo "<div class='section'>
-            <h3>Tələbələr</h3>
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Ad Soyad</th>
-                    <th>Username</th>
-                    <th>Əməliyyatlar</th>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Tələbə 1</td>
-                    <td>telebe1@example.com</td>
-                    <td>
-                        <button class='edit-btn'>Redaktə et</button>
-                        <button class='delete-btn'>Sil</button>
-                    </td>
-                </tr>
-            </table>
-            <button class='add-btn'>+ Yeni tələbə əlavə et</button>
-          </div>";
+    session_start();
+    if (!isset($_SESSION['ad'])) {
+        header("Location: index.htm");
+        exit();
     }
 
+    include('database.php');
 
+    $name = $_SESSION['ad'];
+    $type = $_SESSION['type'];
 
-    $conn->close();
+    // ------------------ Əməliyyatlar ------------------
+    
+    // Müəllim əlavə
+    if (isset($_POST['add_teacher'])) {
+        $name_input = $_POST['name'];
+        $surname_input = $_POST['surname'];
+        $username_input = $_POST['username'];
+        $conn->query("INSERT INTO users (name, surname, username, user_type) VALUES ('$name_input', '$surname_input', '$username_input', 'teacher')");
+    }
+
+    // Müəllim sil
+    if (isset($_POST['delete_teacher'])) {
+        $id = $_POST['id'];
+        $conn->query("DELETE FROM users WHERE id=$id");
+    }
+
+    // Müəllim redaktə
+    if (isset($_POST['edit_teacher'])) {
+        $id = $_POST['id'];
+        header("Location: edit.php?id=$id");
+        exit();
+    }
+
+    // Tyutor əlavə/sil/redaktə
+    if (isset($_POST['add_tutor'])) {
+        $name_input = $_POST['name'];
+        $surname_input = $_POST['surname'];
+        $username_input = $_POST['username'];
+        $conn->query("INSERT INTO users (name, surname, username, user_type) VALUES ('$name_input', '$surname_input', '$username_input', 'tutor')");
+    }
+
+    if (isset($_POST['delete_tutor'])) {
+        $id = $_POST['id'];
+        $conn->query("DELETE FROM users WHERE id=$id");
+    }
+
+    if (isset($_POST['edit_tutor'])) {
+        $id = $_POST['id'];
+        header("Location: edit.php?id=$id");
+        exit();
+    }
+
+    // Tələbə əlavə/sil/redaktə
+    if (isset($_POST['add_student'])) {
+        $name_input = $_POST['name'];
+        $surname_input = $_POST['surname'];
+        $username_input = $_POST['username'];
+        $conn->query("INSERT INTO users (name, surname, username, user_type) VALUES ('$name_input', '$surname_input', '$username_input', 'student')");
+    }
+
+    if (isset($_POST['delete_student'])) {
+        $id = $_POST['id'];
+        $conn->query("DELETE FROM users WHERE id=$id");
+    }
+
+    if (isset($_POST['edit_student'])) {
+        $id = $_POST['id'];
+        header("Location: edit.php?id=$id");
+        exit();
+    }
     ?>
 
-    <hr>
-    <br />
-    <a href="logout.php">Logout</a>
-</body>
+    <!DOCTYPE html>
+    <html lang="en">
 
-</html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Student Portal</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+
+        <hr>
+
+        <?php if ($type == "admin"): ?>
+
+            <style>
+                /* Ümumi bölmələr */
+.section {
+    margin: 30px auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 900px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif;
+}
+
+/* Başlıqlar */
+.section h3 {
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.5em;
+    border-bottom: 2px solid #007BFF;
+    padding-bottom: 5px;
+}
+
+/* Cədvəl tərzi */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+table th {
+    background-color: #007BFF;
+    color: #fff;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Düymələr */
+button {
+    cursor: pointer;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9em;
+    transition: 0.3s;
+}
+
+.edit-btn {
+    background-color: #ffc107;
+    color: #fff;
+}
+
+.edit-btn:hover {
+    background-color: #e0a800;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.add-btn {
+    background-color: #28a745;
+    color: #fff;
+    margin-top: 10px;
+}
+
+.add-btn:hover {
+    background-color: #218838;
+}
+
+/* Form elementləri */
+form input[type="text"],
+form input[type="email"] {
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: calc(33% - 14px);
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+            </style>
+
+            <?php
+            // --- Müəllimlər ---
+            $result = $conn->query("SELECT id, CONCAT(name,' ',surname) AS fullname, username FROM users WHERE user_type='teacher'");
+            echo "<div class='section'>
+<h3>Müəllimlər</h3>
+<table>
+<tr><th>ID</th><th>Ad Soyad</th><th>Username</th><th>Əməliyyatlar</th></tr>";
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr>
+    <td>" . $row['id'] . "</td>
+    <td>" . $row['fullname'] . "</td>
+    <td>" . $row['username'] . "</td>
+    <td>
+        <form method='POST' style='display:inline;'>
+            <input type='hidden' name='id' value='" . $row['id'] . "'>
+            <button type='submit' name='edit_teacher' class='edit-btn'>Redaktə et</button>
+        </form>
+        <form method='POST' style='display:inline;'>
+            <input type='hidden' name='id' value='" . $row['id'] . "'>
+            <button type='submit' name='delete_teacher' class='delete-btn'>Sil</button>
+        </form>
+    </td>
+    </tr>";
+            }
+            echo "</table>
+<form method='POST'>
+<input type='text' name='name' placeholder='Ad' required>
+<input type='text' name='surname' placeholder='Soyad' required>
+<input type='email' name='username' placeholder='Email' required>
+<button type='submit' name='add_teacher' class='add-btn'>+ Yeni müəllim əlavə et</button>
+</form>
+</div>";
+
+            // --- Tyutorlar ---
+            $result = $conn->query("SELECT id, CONCAT(name,' ',surname) AS fullname, username FROM users WHERE user_type='tutor'");
+            echo "<div class='section'>
+<h3>Tyutorlar</h3>
+<table>
+<tr><th>ID</th><th>Ad Soyad</th><th>Username</th><th>Əməliyyatlar</th></tr>";
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr>
+    <td>" . $row['id'] . "</td>
+    <td>" . $row['fullname'] . "</td>
+    <td>" . $row['username'] . "</td>
+    <td>
+        <form method='POST' style='display:inline;'>
+            <input type='hidden' name='id' value='" . $row['id'] . "'>
+            <button type='submit' name='edit_tutor' class='edit-btn'>Redaktə et</button>
+        </form>
+        <form method='POST' style='display:inline;'>
+            <input type='hidden' name='id' value='" . $row['id'] . "'>
+            <button type='submit' name='delete_tutor' class='delete-btn'>Sil</button>
+        </form>
+    </td>
+    </tr>";
+            }
+            echo "</table>
+<form method='POST'>
+<input type='text' name='name' placeholder='Ad' required>
+<input type='text' name='surname' placeholder='Soyad' required>
+<input type='email' name='username' placeholder='Email' required>
+<button type='submit' name='add_tutor' class='add-btn'>+ Yeni tyutor əlavə et</button>
+</form>
+</div>";
+
+            // --- Tələbələr ---
+            $result = $conn->query("SELECT id, CONCAT(name,' ',surname) AS fullname, username FROM users WHERE user_type='student'");
+            echo "<div class='section'>
+<h3>Tələbələr</h3>
+<table>
+<tr><th>ID</th><th>Ad Soyad</th><th>Username</th><th>Əməliyyatlar</th></tr>";
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr>
+    <td>" . $row['id'] . "</td>
+    <td>" . $row['fullname'] . "</td>
+    <td>" . $row['username'] . "</td>
+    <td>
+        <form method='POST' style='display:inline;'>
+            <input type='hidden' name='id' value='" . $row['id'] . "'>
+            <button type='submit' name='edit_student' class='edit-btn'>Redaktə et</button>
+        </form>
+        <form method='POST' style='display:inline;'>
+            <input type='hidden' name='id' value='" . $row['id'] . "'>
+            <button type='submit' name='delete_student' class='delete-btn'>Sil</button>
+        </form>
+    </td>
+    </tr>";
+            }
+            echo "</table>
+<form method='POST'>
+<input type='text' name='name' placeholder='Ad' required>
+<input type='text' name='surname' placeholder='Soyad' required>
+<input type='email' name='username' placeholder='Email' required>
+<button type='submit' name='add_student' class='add-btn'>+ Yeni tələbə əlavə et</button>
+</form>
+</div>";
+
+            $conn->close();
+        endif;
+        ?>
+
+        <hr>
+        <br />
+        <a href="logout.php">Logout</a>
+    </body>
+
+    </html>
